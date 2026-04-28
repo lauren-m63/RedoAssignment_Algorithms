@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 
@@ -32,6 +33,18 @@ i should return the order of courses you have to take to take numCourses-1 in th
         }; // output should be 0,2,1,3
 
 
+        int [] result= findOrder(numCourses, prereq);
+
+
+
+        System.out.println(Arrays.toString(result));
+
+
+       // System.out.println(findOrder(numCourses, prereq));
+
+
+
+
     }// END MAIN
 
 
@@ -39,7 +52,7 @@ i should return the order of courses you have to take to take numCourses-1 in th
     // so numCourses -1 variable is equal to the number of rows and numCourses length is the realtime number starting at 1
 
 
-    public int[] findOrder(int numCourses, int[][] prereq) {
+    public static int[] findOrder(int numCourses, int[][] prereq) {
 
         int[] orderClassesArray = new int[numCourses-1];
         List<List<Integer>> list = new ArrayList<>(); // so i can do my thing of the prereqs as a list all of them for the one course int
@@ -55,9 +68,27 @@ i should return the order of courses you have to take to take numCourses-1 in th
         Stack<Integer> stack = new Stack<>();
 
         for (int i = 0; i < numCourses; i++) {
-
+            if (visited[i] == 0) {
+                if(!DFSMethod(i, list, visited, stack)){
+                    return new int[0]; // cycle deteced and return the mepty list
+                }
+            }
 
         }// end for loop
+
+        int [] result = new int [numCourses];
+        int i = 0;
+
+        while (!stack.isEmpty()){
+            result[i++] = stack.pop();
+        }
+
+//        for (int i = 0; i < result.length; i++) {
+//                System.out.print(result[i] + " ");
+//            System.out.println();// to separate my rows
+//        }
+
+        return result;
 
 
         // either dfs or bfs but if i were to visually represent this graph should i go deep or wide
@@ -86,14 +117,30 @@ i should return the order of courses you have to take to take numCourses-1 in th
          */
 
 
-        return orderClassesArray;
+
+        //return orderClassesArray;
     }// END FINDORDER
 
 
 
-    public boolean DFSMethod(int node, List<List<Integer>> prereq, int[] visited, Stack<Integer> stack) {
+    public static boolean DFSMethod(int node, List<List<Integer>> prereq, int[] visited, Stack<Integer> stack) {
 
-        return false;
+
+        if (visited[node] == 1) return false;
+        if (visited[node] == 2) return true; // checking if cycle and return
+
+        visited[node] = 1;
+
+        for (int neighbohr: prereq.get(node)) {
+            if (!DFSMethod(neighbohr, prereq, visited, stack)){
+                return false;
+            }
+        } // close for loop
+
+        visited[node] = 2;
+        stack.push(node);
+
+        return true;
     } // END DFSMETHOD
 
 } //LAST BRACKET END CLASS
